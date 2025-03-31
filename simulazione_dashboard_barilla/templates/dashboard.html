@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Produzione Barilla</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+    </style>
+    <script>
+        let dati = {};
+
+        async function fetchData(endpoint, type) {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+
+            if (type === 'quantita') {
+                for (let prodotto in data) {
+                    dati[prodotto] = dati[prodotto] || {};
+                    dati[prodotto].quantita = data[prodotto];
+                }
+            } else if (type === 'parametri') {
+                for (let prodotto in data.parametri) {
+                    dati[prodotto] = dati[prodotto] || {};
+                    dati[prodotto].tempo_unitario = data.parametri[prodotto].tempo_unitario;
+                    dati[prodotto].capacita_giornaliera = data.parametri[prodotto].capacita_giornaliera;
+                    dati[prodotto].fasi = data.parametri[prodotto].fasi;
+                }
+                document.getElementById("capacitaComplessiva").textContent =
+                    "Capacità Giornaliera Complessiva: " + data.capacita_complessiva + " unità";
+            } else if (type === 'tempo') {
+                for (let prodotto in data.dettagli) {
+                    dati[prodotto] = dati[prodotto] || {};
+                    dati[prodotto].tempo_totale_prodotto = data.dettagli[prodotto].tempo_totale_prodotto;
+                    dati[prodotto].fasi_singole = data.dettagli[prodotto].fasi_singole;
+                    dati[prodotto].fasi_totali = data.dettagli[prodotto].fasi_totali;
+                    dati[prodotto].quantita = data.quantita[prodotto];
+                }
+                document.getElementById("tempoProduzioneTotale").textContent =
+                    "Tempo Totale Produzione Lotto: " + data.tempo_totale_ore + " ore (" + data
+                    .tempo_totale_giorni + " giorni)";
+            }
+            renderTable();
+        }
+
+        function renderTable() {
+            let output = `
+        <table>
+            <tr>
+                <th>Prodotto</th>
+                <th>Quantità</th>
+                <th>Tempo Unitario (ore)</th>
+                <th>Capacità Giornaliera</th>
+                <th>Durata Singola Fase (ore)</th>
+                <th>Durata Totale Fasi (ore)</th>
+                <th>Tempo Totale Prodotto (ore)</th>
+            </tr>`;
+
+            for (let prodotto in dati) {
+                let qta = dati[prodotto].quantita || 0;
+
+                let fasiSingole = dati[prodotto].fasi_singole ?
+                    Object.entries(dati[prodotto].fasi_singole).map(([fase, durata]) => `${fase}: ${durata} h`).join(
+                        '<br>') :
+                    '-';
+
+                let fasiTotali = dati[prodotto].fasi_totali ?
+                    Object.entries(dati[prodotto].fasi_totali).map(([fase, durata]) => `${fase}: ${durata} h`).join(
+                        '<br>') :
+                    '-';
+
+                output += `
+            <tr>
+                <td>${prodotto}</td>
+                <td>${qta}</td>
+                <td>${dati[prodotto].tempo_unitario || '-'}</td>
+                <td>${dati[prodotto].capacita_giornaliera || '-'}</td>
+                <td>${fasiSingole}</td>
+                <td>${fasiTotali}</td>
+                <td>${dati[prodotto].tempo_totale_prodotto || '-'}</td>
+            </tr>`;
+            }
+
+            output += "</table>";
+            document.getElementById("tabellaDati").innerHTML = output;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dashboard Produzione Barilla</h1>
+
+        <button onclick="fetchData('/genera-quantita', 'quantita')">📦 Genera Quantità</button>
+        <button onclick="fetchData('/genera-parametri', 'parametri')">⚙️ Genera Parametri</button>
+        <button onclick="fetchData('/calcola-tempo', 'tempo')">⏱ Calcola Tempo Produzione</button>
+
+        <h3 id="capacitaComplessiva"></h3>
+        <h3 id="tempoProduzioneTotale"></h3>
+        <div id="tabellaDati">
+            <table>
+                <tr>
+                    <th>Prodotto</th>
+                    <th>Quantità</th>
+                    <th>Tempo Unitario (ore)</th>
+                    <th>Capacità Giornaliera</th>
+                    <th>Tempo Totale Prodotto (ore)</th>
+                </tr>
+                <tr>
+                    <td colspan="5">Premi i pulsanti per popolare la tabella...</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
