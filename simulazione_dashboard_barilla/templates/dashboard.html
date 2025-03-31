@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Produzione Barilla</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,11 +53,89 @@
             background-color: #28a745;
             color: white;
         }
+
+        #graficoView {
+            display: none;
+            margin-top: 20px;
+        }
+
+        canvas {
+            max-width: 700px;
+            margin-top: 20px;
+        }
+
+        input[type=date],
+        select {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 14px;
+        }
+
+        input[type=date]:hover,
+        select:hover {
+            background-color: #218838;
+        }
     </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dashboard Produzione Barilla</h1>
+
+        <button onclick="fetchData('/genera-quantita', 'quantita')">📦 Genera Quantità</button>
+        <button onclick="fetchData('/genera-parametri', 'parametri')">⚙️ Genera Parametri</button>
+        <button onclick="fetchData('/calcola-tempo', 'tempo')">⏱ Calcola Tempo Produzione</button>
+        <button onclick="mostraVistaGrafico()">📈 Genera Grafico Produzione</button>
+
+        <h3 id="capacitaComplessiva"></h3>
+        <h3 id="tempoProduzioneTotale"></h3>
+
+        <div id="tabellaDati">
+            <table>
+                <tr>
+                    <th>Prodotto</th>
+                    <th>Quantità</th>
+                    <th>Tempo Unitario (ore)</th>
+                    <th>Capacità Giornaliera</th>
+                    <th>Tempo Totale Prodotto (ore)</th>
+                </tr>
+                <tr>
+                    <td colspan="5">Premi i pulsanti per popolare la tabella...</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="graficoView">
+            <label for="startDate">Da:</label>
+            <input type="date"
+                id="startDate">
+            <label for="endDate">A:</label>
+            <input type="date"
+                id="endDate">
+            <label for="prodottoSelect">Prodotto:</label>
+            <select id="prodottoSelect">
+                <option value="tutti">Tutti</option>
+                <option value="Spaghetti Barilla">Spaghetti Barilla</option>
+                <option value="Frollini Mulino Bianco">Frollini Mulino Bianco</option>
+                <option value="Pesto Barilla">Pesto Barilla</option>
+            </select>
+            <button onclick="generaGrafico()">📊 Visualizza Grafico</button>
+            <button onclick="tornaAllaTabella()">🔙 Torna alla Tabella</button>
+            <canvas id="graficoProduzione"></canvas>
+        </div>
+    </div>
+
     <script>
         let dati = {};
 
         async function fetchData(endpoint, type) {
+            document.getElementById("tabellaDati").style.display = "block";
+            document.getElementById("graficoView").style.display = "none";
+
             const response = await fetch(endpoint);
             const data = await response.json();
 
@@ -107,13 +186,11 @@
 
                 let fasiSingole = dati[prodotto].fasi_singole ?
                     Object.entries(dati[prodotto].fasi_singole).map(([fase, durata]) => `${fase}: ${durata} h`).join(
-                        '<br>') :
-                    '-';
+                        '<br>') : '-';
 
                 let fasiTotali = dati[prodotto].fasi_totali ?
                     Object.entries(dati[prodotto].fasi_totali).map(([fase, durata]) => `${fase}: ${durata} h`).join(
-                        '<br>') :
-                    '-';
+                        '<br>') : '-';
 
                 output += `
             <tr>
@@ -130,34 +207,62 @@
             output += "</table>";
             document.getElementById("tabellaDati").innerHTML = output;
         }
+
+        function mostraVistaGrafico() {
+            document.getElementById("tabellaDati").style.display = "none";
+            document.getElementById("graficoView").style.display = "block";
+        }
+
+        async function generaGrafico() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            const prodottoFiltro = document.getElementById('prodottoSelect').value;
+            const response = await fetch('/grafico');
+            const storico = await response.json();
+
+            const aggregati = {};
+            storico.forEach(riga => {
+                const dataRiga = riga.Data;
+                const prodotto = riga.Prodotto;
+                if (
+                    (!start || dataRiga >= start) &&
+                    (!end || dataRiga <= end) &&
+                    (prodottoFiltro === "tutti" || prodotto === prodottoFiltro)
+                ) {
+                    const mese = dataRiga.substring(0, 7);
+                    aggregati[mese] = (aggregati[mese] || 0) + parseFloat(riga["Quantita"]);
+                }
+            });
+
+            const labels = Object.keys(aggregati);
+            const values = Object.values(aggregati);
+
+            const ctx = document.getElementById('graficoProduzione').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Quantità prodotta (${prodottoFiltro})`,
+                        data: values,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function tornaAllaTabella() {
+            document.getElementById("graficoView").style.display = "none";
+            document.getElementById("tabellaDati").style.display = "block";
+        }
     </script>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Dashboard Produzione Barilla</h1>
-
-        <button onclick="fetchData('/genera-quantita', 'quantita')">📦 Genera Quantità</button>
-        <button onclick="fetchData('/genera-parametri', 'parametri')">⚙️ Genera Parametri</button>
-        <button onclick="fetchData('/calcola-tempo', 'tempo')">⏱ Calcola Tempo Produzione</button>
-
-        <h3 id="capacitaComplessiva"></h3>
-        <h3 id="tempoProduzioneTotale"></h3>
-        <div id="tabellaDati">
-            <table>
-                <tr>
-                    <th>Prodotto</th>
-                    <th>Quantità</th>
-                    <th>Tempo Unitario (ore)</th>
-                    <th>Capacità Giornaliera</th>
-                    <th>Tempo Totale Prodotto (ore)</th>
-                </tr>
-                <tr>
-                    <td colspan="5">Premi i pulsanti per popolare la tabella...</td>
-                </tr>
-            </table>
-        </div>
-    </div>
 </body>
 
 </html>
