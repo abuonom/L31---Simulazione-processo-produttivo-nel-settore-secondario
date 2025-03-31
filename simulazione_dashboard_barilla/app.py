@@ -20,6 +20,7 @@ def inizializza_csv():
 def dashboard():
     return render_template('dashboard.html')
 
+
 @app.route('/genera-quantita', methods=['GET'])
 def genera_quantita_route():
     global prodotti
