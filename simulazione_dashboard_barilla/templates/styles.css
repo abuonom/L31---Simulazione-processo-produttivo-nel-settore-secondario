@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eef2f7;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  button,
+  input[type=date],
+  input[type=text],
+  select {
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+  }
+  
+  button:hover,
+  input[type=date]:hover,
+  input[type=text]:hover,
+  select:hover {
+    background-color: #218838;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+  
+  th,
+  td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+  }
+  
+  th:hover {
+    background-color: #218838;
+  }
+  
+  #graficoView,
+  #storicoView {
+    display: none;
+    margin-top: 20px;
+  }
+  
+  canvas {
+    max-width: 700px;
+    margin-top: 20px;
+  }
+  
+  .filtro-storico {
+    margin-bottom: 10px;
+  }
+  
+  .filtro-storico input {
+    background-color: white;
+    color: black;
+  }
+  

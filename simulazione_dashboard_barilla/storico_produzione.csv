@@ -1,7 +1,73 @@
 Data,Prodotto,Quantita,Tempo Totale (ore),Tempo Totale (giorni)
-2025-03-31,Spaghetti Barilla,1159,150.67,6.28
-2025-03-31,Frollini Mulino Bianco,1926,30.82,1.28
-2025-03-31,Pesto Barilla,1345,33.62,1.4
-2025-03-31,Spaghetti Barilla,1816,236.08,9.84
-2025-03-31,Frollini Mulino Bianco,1828,29.25,1.22
-2025-03-31,Pesto Barilla,1204,30.1,1.25
+2025-01-10,Spaghetti Barilla,1159,150.67,6.28
+2025-01-15,Frollini Mulino Bianco,1926,30.82,1.28
+2025-01-22,Pesto Barilla,1345,33.62,1.4
+2025-01-28,Spaghetti Barilla,1816,236.08,9.84
+2025-02-03,Frollini Mulino Bianco,1828,29.25,1.22
+2025-02-07,Pesto Barilla,1204,30.1,1.25
+2025-02-12,Spaghetti Barilla,1226,159.38,6.64
+2025-02-15,Frollini Mulino Bianco,811,12.98,0.54
+2025-02-19,Pesto Barilla,1649,41.23,1.72
+2025-02-22,Spaghetti Barilla,641,83.33,3.47
+2025-02-25,Frollini Mulino Bianco,1332,21.31,0.89
+2025-02-28,Pesto Barilla,635,15.88,0.66
+2025-03-03,Spaghetti Barilla,799,103.87,4.33
+2025-03-06,Frollini Mulino Bianco,1193,19.09,0.8
+2025-03-08,Pesto Barilla,771,19.28,0.8
+2025-03-10,Spaghetti Barilla,1061,137.93,5.75
+2025-03-12,Frollini Mulino Bianco,1570,25.12,1.05
+2025-03-14,Pesto Barilla,1839,45.98,1.92
+2025-03-16,Spaghetti Barilla,1247,162.11,6.75
+2025-03-17,Frollini Mulino Bianco,966,15.46,0.64
+2025-03-18,Pesto Barilla,546,13.65,0.57
+2025-03-19,Spaghetti Barilla,712,92.56,3.86
+2025-03-20,Frollini Mulino Bianco,1552,24.83,1.03
+2025-03-21,Pesto Barilla,1897,47.43,1.98
+2025-03-22,Spaghetti Barilla,1196,155.48,6.48
+2025-03-23,Frollini Mulino Bianco,1877,30.03,1.25
+2025-03-24,Pesto Barilla,988,24.7,1.03
+2025-03-25,Spaghetti Barilla,1977,257.01,10.71
+2025-03-26,Frollini Mulino Bianco,1587,25.39,1.06
+2025-03-27,Pesto Barilla,587,14.68,0.61
+2025-03-28,Spaghetti Barilla,1140,148.2,6.18
+2025-03-29,Frollini Mulino Bianco,1971,31.54,1.31
+2025-03-30,Pesto Barilla,524,13.1,0.55
+2025-03-31,Spaghetti Barilla,1137,147.81,6.16
+2025-01-05,Frollini Mulino Bianco,1094,17.5,0.73
+2025-01-08,Pesto Barilla,528,13.2,0.55
+2025-01-12,Spaghetti Barilla,1901,247.13,10.3
+2025-01-18,Frollini Mulino Bianco,1699,27.18,1.13
+2025-01-25,Pesto Barilla,1399,34.98,1.46
+2025-02-01,Spaghetti Barilla,797,103.61,4.32
+2025-02-05,Frollini Mulino Bianco,753,12.05,0.5
+2025-02-09,Pesto Barilla,1886,47.15,1.96
+2025-02-14,Spaghetti Barilla,918,119.34,4.97
+2025-02-18,Frollini Mulino Bianco,900,14.4,0.6
+2025-02-21,Pesto Barilla,1774,44.35,1.85
+2025-02-24,Spaghetti Barilla,993,129.09,5.38
+2025-02-27,Frollini Mulino Bianco,1046,16.74,0.7
+2025-03-02,Pesto Barilla,954,23.85,0.99
+2025-03-05,Spaghetti Barilla,944,122.72,5.11
+2025-03-07,Frollini Mulino Bianco,1817,29.07,1.21
+2025-03-09,Pesto Barilla,1949,48.73,2.03
+2025-03-31,Spaghetti Barilla,1763,229.19,9.55
+2025-03-31,Frollini Mulino Bianco,1866,29.86,1.24
+2025-03-31,Pesto Barilla,1107,27.68,1.15
+2025-03-31,Spaghetti Barilla,1418,184.34,7.68
+2025-03-31,Frollini Mulino Bianco,1723,27.57,1.15
+2025-03-31,Pesto Barilla,1948,48.7,2.03
+2025-03-31,Spaghetti Barilla,863,112.19,4.67
+2025-03-31,Frollini Mulino Bianco,1482,23.71,0.99
+2025-03-31,Pesto Barilla,1573,39.33,1.64
+2025-03-31,Spaghetti Barilla,1858,241.54,10.06
+2025-03-31,Frollini Mulino Bianco,1765,28.24,1.18
+2025-03-31,Pesto Barilla,1947,48.68,2.03
+2025-03-31,Spaghetti Barilla,1749,227.37,9.47
+2025-03-31,Frollini Mulino Bianco,937,14.99,0.62
+2025-03-31,Pesto Barilla,1764,44.1,1.84
+2025-03-31,Spaghetti Barilla,1731,225.03,9.38
+2025-03-31,Frollini Mulino Bianco,1787,28.59,1.19
+2025-03-31,Pesto Barilla,1725,43.12,1.8
+2025-03-31,Spaghetti Barilla,1370,178.1,7.42
+2025-03-31,Frollini Mulino Bianco,950,15.2,0.63
+2025-03-31,Pesto Barilla,1192,29.8,1.24

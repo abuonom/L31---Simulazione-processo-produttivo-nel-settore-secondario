@@ -76,9 +76,19 @@ def grafico_produzione():
     if not os.path.exists(CSV_PATH):
         return jsonify([])
 
+    cleaned_rows = []
     with open(CSV_PATH, mode='r') as file:
         reader = csv.DictReader(file)
-        return jsonify(list(reader))
+        for row in reader:
+            if row.get("Data") and row.get("Prodotto") and row.get("Quantita"):
+                try:
+                    float(row["Quantita"])
+                    cleaned_rows.append(row)
+                except ValueError:
+                    pass
+
+    return jsonify(cleaned_rows)
+
 
 
 if __name__ == '__main__':
