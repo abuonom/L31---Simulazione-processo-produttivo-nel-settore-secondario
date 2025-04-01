@@ -1,3 +1,7 @@
+""" Classe Prodotto
+    Rappresenta un prodotto da produrre, con le sue caratteristiche
+    come nome, tempo unitario, capacità giornaliera e fasi di produzione.
+    """
 class Prodotto:
     def __init__(self, nome, tempo_unitario, capacita_giornaliera, fasi):
         self.nome = nome

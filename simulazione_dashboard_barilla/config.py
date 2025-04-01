@@ -8,6 +8,17 @@ def genera_fasi(nome_prodotto, tempo_totale, num_fasi, nomi_fasi):
     durata_fasi = [(p / somma_pesi) * tempo_totale for p in pesi]
     return dict(zip(nomi_fasi, durata_fasi))
 
+
+""" Genera i prodotti con i loro parametri e le fasi di produzione.
+    Ogni prodotto ha un nome, un tempo unitario di produzione, una capacità giornaliera
+    e una lista di fasi di produzione con i relativi tempi.
+    I tempi unitari e le capacità giornaliere sono generati casualmente
+    all'interno di intervalli specifici.
+    Le fasi di produzione sono definite in base al tipo di prodotto.
+    I prodotti generati sono:
+    - Spaghetti Barilla
+    - Frollini Mulino Bianco
+    - Pesto Barilla"""
 def genera_prodotti():
     prodotti = []
 
@@ -43,9 +54,17 @@ def genera_prodotti():
 
     return prodotti
 
+""" Genera una quantità casuale di prodotti da produrre
+    per ogni prodotto. La quantità è compresa tra 500 e 2000 unità.
+    Restituisce un dizionario con il nome del prodotto come chiave
+    e la quantità da produrre come valore."""
 def genera_quantita(prodotti):
     return {prodotto.nome: random.randint(500, 2000) for prodotto in prodotti}
 
+""" Restituisce un dizionario con i parametri di produzione
+    per ogni prodotto, la capacità complessiva di produzione e la lista dei prodotti.
+    I parametri includono il tempo unitario,
+    la capacità giornaliera e le fasi di produzione."""
 def genera_parametri():
     prodotti = genera_prodotti()
     parametri = {

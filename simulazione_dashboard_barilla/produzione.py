@@ -1,3 +1,7 @@
+""" Modulo che si occupa di calcolare il tempo totale di produzione
+    dei prodotti e di generare i dettagli delle fasi di produzione.
+    Utilizza la classe Prodotto per rappresentare i prodotti e le loro fasi.
+"""
 def calcola_tempo_totale(prodotti, quantita):
     tempo_totale = 0
     dettagli_tempo = {}

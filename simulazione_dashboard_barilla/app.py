@@ -16,10 +16,17 @@ def inizializza_csv():
             writer = csv.writer(file)
             writer.writerow(["Data", "Prodotto", "Quantita", "Tempo Totale (ore)", "Tempo Totale (giorni)"])
 
+""" Sequenza di route per il dashboard
+    - /: dashboard principale
+    - /genera-quantita: genera una quantità casuale di prodotti da produrre
+    - /genera-parametri: genera i parametri di produzione
+    - /calcola-tempo: calcola il tempo totale di produzione
+    - /storico: scarica lo storico della produzione in CSV
+    - /grafico: restituisce i dati per il grafico della produzione"""
+    
 @app.route('/')
 def dashboard():
     return render_template('dashboard.html')
-
 
 @app.route('/genera-quantita', methods=['GET'])
 def genera_quantita_route():
@@ -47,8 +54,8 @@ def calcola_tempo_route():
     tempo_totale_ore, dettagli = calcola_tempo_totale(prodotti, quantita)
     tempo_totale_giorni = round(tempo_totale_ore / 24, 2)
 
-    # Salva su CSV
     inizializza_csv()
+    #Scrive i dati calcolati nel CSV 
     with open(CSV_PATH, mode='a', newline='') as file:
         writer = csv.writer(file)
         for prodotto in prodotti:
@@ -79,6 +86,7 @@ def grafico_produzione():
 
     cleaned_rows = []
     with open(CSV_PATH, mode='r') as file:
+        # Legge il CSV e filtra le righe vuote
         reader = csv.DictReader(file)
         for row in reader:
             if row.get("Data") and row.get("Prodotto") and row.get("Quantita"):

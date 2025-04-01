@@ -7,6 +7,10 @@ const righePerPagina = 10;
 let sortKey = null;
 let sortAsc = true;
 
+
+/*Funzione asincrona che recupera dati da un endpoint specifico. 
+In base al tipo di informazioni richieste (quantità, parametri o tempi di produzione). 
+Aggiorna dinamicamente l'interfaccia utente mostrando i dati nella tabella.*/
 async function fetchData(endpoint, type) {
   document.getElementById("tabellaDati").style.display = "block";
   document.getElementById("graficoView").style.display = "none";
@@ -43,6 +47,7 @@ async function fetchData(endpoint, type) {
   renderTable();
 }
 
+/*Funzione che serve per renderizzare la tabella*/
 function renderTable() {
   let output = `
     <table>
@@ -84,6 +89,7 @@ function mostraVistaGrafico() {
   document.getElementById("storicoView").style.display = "none";
 }
 
+/* Funzione per generare il grafico */
 async function generaGrafico() {
   const start = document.getElementById('startDate').value;
   const end = document.getElementById('endDate').value;
