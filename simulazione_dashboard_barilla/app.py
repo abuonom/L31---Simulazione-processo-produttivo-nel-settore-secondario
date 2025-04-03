@@ -3,39 +3,50 @@ from config import genera_quantita, genera_parametri
 from produzione import calcola_tempo_totale
 import csv
 import os
+import sys
 from datetime import datetime
 
-app = Flask(__name__)
-prodotti = []
-CSV_PATH = 'storico_produzione.csv'
+# Gestione delle cartelle per PyInstaller
+if getattr(sys, 'frozen', False):
+    # Se l'app è stata congelata con PyInstaller
+    base_path = sys._MEIPASS
+else:
+    # Se l'app è eseguita normalmente, usa il percorso corrente
+    base_path = os.path.abspath(".")
 
-# Inizializza il file CSV con intestazioni se non esiste
+
+template_folder = os.path.join(base_path, 'templates')
+static_folder = os.path.join(base_path, 'static')
+
+# Crea l'istanza dell'app Flask con cartelle template e static specifiche
+app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+
+
+prodotti = []
+CSV_PATH = os.path.join(base_path, 'storico_produzione.csv')
+
+# Inizializza il file CSV con le intestazioni se non esiste
 def inizializza_csv():
     if not os.path.exists(CSV_PATH):
         with open(CSV_PATH, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Data", "Prodotto", "Quantita", "Tempo Totale (ore)", "Tempo Totale (giorni)"])
 
-""" Sequenza di route per il dashboard
-    - /: dashboard principale
-    - /genera-quantita: genera una quantità casuale di prodotti da produrre
-    - /genera-parametri: genera i parametri di produzione
-    - /calcola-tempo: calcola il tempo totale di produzione
-    - /storico: scarica lo storico della produzione in CSV
-    - /grafico: restituisce i dati per il grafico della produzione"""
-    
+# Route principale
 @app.route('/')
 def dashboard():
     return render_template('dashboard.html')
 
+# Route generazione quantità prodotto randomica
 @app.route('/genera-quantita', methods=['GET'])
 def genera_quantita_route():
     global prodotti
     if not prodotti:
         _, _, prodotti = genera_parametri()
-    quantita = genera_quantita(prodotti)
+    quantita = genera_quantita(prodotti) 
     return jsonify(quantita)
 
+# Route che restituisce i parametri di produzione (tempo unitario, capacità, fasi)
 @app.route('/genera-parametri', methods=['GET'])
 def genera_parametri_route():
     global prodotti
@@ -45,18 +56,19 @@ def genera_parametri_route():
         "capacita_complessiva": capacita_complessiva
     })
 
+# Route che calcola tempo totale di produzione
 @app.route('/calcola-tempo', methods=['GET'])
 def calcola_tempo_route():
     global prodotti
     if not prodotti:
-        _, _, prodotti = genera_parametri()
+        _, _, prodotti = genera_parametri()  # Se i prodotti non sono stati generati, li genera
     quantita = genera_quantita(prodotti)
     tempo_totale_ore, dettagli = calcola_tempo_totale(prodotti, quantita)
-    tempo_totale_giorni = round(tempo_totale_ore / 24, 2)
+    tempo_totale_giorni = round(tempo_totale_ore / 24, 2)  # Conversione tempo in giorni
 
     inizializza_csv()
-    #Scrive i dati calcolati nel CSV 
     with open(CSV_PATH, mode='a', newline='') as file:
+        # Scrittura dei dati sul CSV
         writer = csv.writer(file)
         for prodotto in prodotti:
             qta = quantita[prodotto.nome]
@@ -75,10 +87,12 @@ def calcola_tempo_route():
         "quantita": quantita
     })
 
+# Route per lo storico della produzione
 @app.route('/storico', methods=['GET'])
 def scarica_storico():
     return send_file(CSV_PATH, as_attachment=True)
 
+# Route che restituisce i dati per il grafico della produzione
 @app.route('/grafico', methods=['GET'])
 def grafico_produzione():
     if not os.path.exists(CSV_PATH):
@@ -86,7 +100,6 @@ def grafico_produzione():
 
     cleaned_rows = []
     with open(CSV_PATH, mode='r') as file:
-        # Legge il CSV e filtra le righe vuote
         reader = csv.DictReader(file)
         for row in reader:
             if row.get("Data") and row.get("Prodotto") and row.get("Quantita"):
@@ -99,6 +112,5 @@ def grafico_produzione():
     return jsonify(cleaned_rows)
 
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
