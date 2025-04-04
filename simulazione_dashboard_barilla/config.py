@@ -9,51 +9,54 @@ def genera_fasi(nome_prodotto, tempo_totale, num_fasi, nomi_fasi):
     return dict(zip(nomi_fasi, durata_fasi))
 
 def genera_prodotti():
-    #Genera i prodotti con parametri casuali e fasi di produzione
-    prodotti = []
-
-    tempo_unitario_sb = round(random.uniform(0.12, 0.14), 3)
-    capacita_sb = random.randint(2000, 5000)
-    fasi_sb = [
-        "Selezione e Macinazione", "Impasto e Gramolatura",
-        "Trafilatura", "Essiccazione", "Confezionamento"
+    #Crea la lista di prodotti vuoti, senza caratteristiche specifiche.
+    prodotti = [
+        Prodotto("Spaghetti Barilla", None, None, None),
+        Prodotto("Frollini Mulino Bianco", None, None, None),
+        Prodotto("Pesto Barilla", None, None, None)
     ]
-    prodotti.append(Prodotto("Spaghetti Barilla", tempo_unitario_sb, capacita_sb,
-                             genera_fasi("Spaghetti", tempo_unitario_sb, len(fasi_sb), fasi_sb)))
-
-    tempo_unitario_fr = round(random.uniform(0.015, 0.017), 3)
-    capacita_fr = random.randint(3000, 7000)
-    fasi_fr = [
-        "Impasto ingredienti", "Formatura biscotti",
-        "Cottura", "Raffreddamento e controllo qualità", "Confezionamento"
-    ]
-    prodotti.append(Prodotto("Frollini Mulino Bianco", tempo_unitario_fr, capacita_fr,
-                             genera_fasi("Frollini", tempo_unitario_fr, len(fasi_fr), fasi_fr)))
-
-    tempo_unitario_pb = round(random.uniform(0.023, 0.027), 3)
-    capacita_pb = random.randint(1000, 3000)
-    fasi_pb = [
-        "Controllo materie prime", "Pulizia e preparazione",
-        "Miscelazione ingredienti", "Pastorizzazione", "Confezionamento"
-    ]
-    prodotti.append(Prodotto("Pesto Barilla", tempo_unitario_pb, capacita_pb,
-                             genera_fasi("Pesto", tempo_unitario_pb, len(fasi_pb), fasi_pb)))
-
     return prodotti
 
 def genera_quantita(prodotti):
     #Genera quantità casuali di ciascun prodotto da produrre
     return {prodotto.nome: random.randint(500, 2000) for prodotto in prodotti}
 
-def genera_parametri():
-    #Genera i parametri di produzione per ogni prodotto
-    prodotti = genera_prodotti()
-    parametri = {
-        p.nome: {
-            "tempo_unitario": p.tempo_unitario,
-            "capacita_giornaliera": p.capacita_giornaliera,
-            "fasi": p.fasi
-        } for p in prodotti
-    }
+def genera_parametri(prodotti):
+    #Genera i parametri di produzione per ogni prodotto.
+    parametri = {}
+
+    for prodotto in prodotti:
+        if prodotto.nome == "Spaghetti Barilla":
+            tempo_unitario = round(random.uniform(0.12, 0.14), 3)
+            capacita_giornaliera = random.randint(2000, 5000)
+            fasi = [
+                "Selezione e Macinazione", "Impasto e Gramolatura",
+                "Trafilatura", "Essiccazione", "Confezionamento"
+            ]
+        elif prodotto.nome == "Frollini Mulino Bianco":
+            tempo_unitario = round(random.uniform(0.015, 0.017), 3)
+            capacita_giornaliera = random.randint(3000, 7000)
+            fasi = [
+                "Impasto ingredienti", "Formatura biscotti",
+                "Cottura", "Raffreddamento e controllo qualità", "Confezionamento"
+            ]
+        elif prodotto.nome == "Pesto Barilla":
+            tempo_unitario = round(random.uniform(0.023, 0.027), 3)
+            capacita_giornaliera = random.randint(1000, 3000)
+            fasi = [
+                "Controllo materie prime", "Pulizia e preparazione",
+                "Miscelazione ingredienti", "Pastorizzazione", "Confezionamento"
+            ]
+
+        prodotto.tempo_unitario = tempo_unitario
+        prodotto.capacita_giornaliera = capacita_giornaliera
+        prodotto.fasi = genera_fasi(prodotto.nome, tempo_unitario, len(fasi), fasi)
+
+        parametri[prodotto.nome] = {
+            "tempo_unitario": prodotto.tempo_unitario,
+            "capacita_giornaliera": prodotto.capacita_giornaliera,
+            "fasi": prodotto.fasi
+        }
+
     capacita_complessiva = sum(p.capacita_giornaliera for p in prodotti)
-    return parametri, capacita_complessiva, prodotti
+    return parametri, capacita_complessiva

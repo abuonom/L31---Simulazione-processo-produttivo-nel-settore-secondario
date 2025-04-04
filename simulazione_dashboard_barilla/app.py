@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, send_file
-from config import genera_quantita, genera_parametri
+from config import genera_quantita, genera_parametri, genera_prodotti
 from produzione import calcola_tempo_totale
 import csv
 import os
@@ -14,15 +14,15 @@ else:
     # Se l'app è eseguita normalmente, usa il percorso corrente
     base_path = os.path.abspath(".")
 
-
 template_folder = os.path.join(base_path, 'templates')
 static_folder = os.path.join(base_path, 'static')
 
 # Crea l'istanza dell'app Flask con cartelle template e static specifiche
 app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-
+# Variabili globali
 prodotti = []
+quantita = {}
 CSV_PATH = os.path.join(base_path, 'storico_produzione.csv')
 
 # Inizializza il file CSV con le intestazioni se non esiste
@@ -42,7 +42,7 @@ def dashboard():
 def genera_quantita_route():
     global prodotti, quantita
     if not prodotti:
-        _, _, prodotti = genera_parametri()
+        prodotti = genera_prodotti()
     quantita = genera_quantita(prodotti) 
     return jsonify(quantita)
 
@@ -50,7 +50,9 @@ def genera_quantita_route():
 @app.route('/genera-parametri', methods=['GET'])
 def genera_parametri_route():
     global prodotti, quantita
-    parametri, capacita_complessiva, prodotti = genera_parametri()
+    if not prodotti:
+        prodotti = genera_prodotti() 
+    parametri, capacita_complessiva = genera_parametri(prodotti)
     return jsonify({
         "parametri": parametri,
         "capacita_complessiva": capacita_complessiva
@@ -61,9 +63,9 @@ def genera_parametri_route():
 def calcola_tempo_route():
     global prodotti, quantita
     if not prodotti:
-        _, _, prodotti = genera_parametri()  # Se i prodotti non sono stati generati, li genera
-    if not quantita:  # Verifica se la quantità è già stata generata
-        quantita = genera_quantita(prodotti)  # Genera la quantità solo se non è già presente
+        prodotti = genera_prodotti() 
+    if not quantita:
+        quantita = genera_quantita(prodotti)
     tempo_totale_ore, dettagli = calcola_tempo_totale(prodotti, quantita)
     tempo_totale_giorni = round(tempo_totale_ore / 24, 2)  # Conversione tempo in giorni
 
