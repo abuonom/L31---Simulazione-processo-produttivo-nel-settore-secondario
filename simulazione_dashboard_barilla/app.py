@@ -40,7 +40,7 @@ def dashboard():
 # Route generazione quantità prodotto randomica
 @app.route('/genera-quantita', methods=['GET'])
 def genera_quantita_route():
-    global prodotti
+    global prodotti, quantita
     if not prodotti:
         _, _, prodotti = genera_parametri()
     quantita = genera_quantita(prodotti) 
@@ -49,7 +49,7 @@ def genera_quantita_route():
 # Route che restituisce i parametri di produzione (tempo unitario, capacità, fasi)
 @app.route('/genera-parametri', methods=['GET'])
 def genera_parametri_route():
-    global prodotti
+    global prodotti, quantita
     parametri, capacita_complessiva, prodotti = genera_parametri()
     return jsonify({
         "parametri": parametri,
@@ -59,10 +59,11 @@ def genera_parametri_route():
 # Route che calcola tempo totale di produzione
 @app.route('/calcola-tempo', methods=['GET'])
 def calcola_tempo_route():
-    global prodotti
+    global prodotti, quantita
     if not prodotti:
         _, _, prodotti = genera_parametri()  # Se i prodotti non sono stati generati, li genera
-    quantita = genera_quantita(prodotti)
+    if not quantita:  # Verifica se la quantità è già stata generata
+        quantita = genera_quantita(prodotti)  # Genera la quantità solo se non è già presente
     tempo_totale_ore, dettagli = calcola_tempo_totale(prodotti, quantita)
     tempo_totale_giorni = round(tempo_totale_ore / 24, 2)  # Conversione tempo in giorni
 
