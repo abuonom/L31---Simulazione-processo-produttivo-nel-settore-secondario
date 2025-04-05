@@ -47,7 +47,7 @@ async function fetchData(endpoint, type) {
   renderTable();
 }
 
-/*Funzione che serve per renderizzare la tabella*/
+/*Funzione che si occupa di renderizzare la tabella*/
 function renderTable() {
   let output = `
     <table>
